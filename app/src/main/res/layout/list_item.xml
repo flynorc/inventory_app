@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/standardMargin"
+        android:layout_marginRight="@dimen/standardMargin"
+        android:id="@+id/item_thumb"
+        android:scaleType="centerInside"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginBottom="100dp">
+        <TextView
+            android:id="@+id/item_name"
+            tools:text="Item name"
+            style="@style/listItemName" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_price"
+            tools:text="19.90€"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_quantity"
+            tools:text="13 left"/>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:id="@+id/item_sell_button"
+
+        android:text="@string/sell_button"
+        android:layout_marginRight="@dimen/standardMargin"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

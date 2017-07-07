@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.flynorc.a10_inventoryapp.AddEditItemActivity">
+
+        <!-- Name field -->
+        <EditText
+            android:id="@+id/edit_product_name"
+            android:inputType="textCapWords"
+            android:hint="@string/product_name_label"
+            style="@style/EditorFieldStyle" />
+
+        <!-- Price field -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edit_product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/product_price_label"
+                android:inputType="numberDecimal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/price_unit"/>
+
+        </LinearLayout>
+
+        <!-- Quantity field -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal">
+            <Button
+                android:id="@+id/quantity_dec_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="quantityDec"
+                android:text="-"/>
+            <EditText
+                android:id="@+id/edit_product_quantity"
+                android:inputType="number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:hint="Current quantity"/>
+
+            <Button
+                android:id="@+id/quantity_inc_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="quantityInc"
+                android:text="+"/>
+        </LinearLayout>
+
+        <!-- Description field -->
+        <EditText
+            android:id="@+id/edit_product_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/product_description_label"/>
+
+        <!-- Supplier email field -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edit_product_supplier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="@string/product_supplier_email_label"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/send_email_button"
+                android:text="@string/send_email_button"
+                android:onClick="sendEmail"/>
+
+        </LinearLayout>
+
+        <!-- container for image buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/select_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_image_label"
+                android:onClick="openImageSelector"/>
+
+            <Button
+                android:id="@+id/take_picture_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/take_picture_label"
+                android:onClick="takePicture"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/image_uri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="here will be image uri"/>
+
+        <ImageView
+            android:id="@+id/image_preview"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerInside" />
+
+    </LinearLayout>
+</ScrollView>
+
