@@ -23,7 +23,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,9 +41,6 @@ import java.util.List;
 public class AddEditItemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     /** Identifier for the product data loader */
     private static final int PRODUCT_LOADER = 0;
-
-    /** For logging purposes only */
-    private static final String LOG_TAG = "Add-Edit-Activity";
 
     // Codes for handling different requests
     private static final int PICK_IMAGE_REQUEST = 0;
@@ -66,7 +62,6 @@ public class AddEditItemActivity extends AppCompatActivity implements LoaderMana
     private EditText quantityEditText;
     private EditText descriptionEditText;
     private EditText supplierEditText;
-    //TODO add input field for the image selection
     private TextView imageUriTextView;
     private ImageView imageView;
     private Button takePictureButton;
@@ -127,34 +122,23 @@ public class AddEditItemActivity extends AppCompatActivity implements LoaderMana
     }
 
     /**
-     * Check if user has already allowed us to access to external storage and
+     * Check if user has already allowed us to access to external storage
+     * ask for permission if it has not yet been given
+     * at this time, no explanation is shown to the user
      */
     public void requestPermissions() {
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            // No explanation needed, we can request the permission.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST);
 
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-                // TODO make this
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the result of the request.
         } else {
             takePictureButton.setEnabled(true);
         }
@@ -228,7 +212,6 @@ public class AddEditItemActivity extends AppCompatActivity implements LoaderMana
      */
     public void openImageSelector(View view) {
         Intent intent;
-        Log.e(LOG_TAG, "Will be dealing with image select.");
 
         if (Build.VERSION.SDK_INT < 19) {
             intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -239,7 +222,7 @@ public class AddEditItemActivity extends AppCompatActivity implements LoaderMana
 
         // Show only images, no videos or anything else
         intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), PICK_IMAGE_REQUEST);
     }
 
     /**
@@ -293,7 +276,6 @@ public class AddEditItemActivity extends AppCompatActivity implements LoaderMana
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        Log.i(LOG_TAG, "Received an \"Activity Result\"");
 
         switch (requestCode) {
             // Chose image from gallery
@@ -302,7 +284,6 @@ public class AddEditItemActivity extends AppCompatActivity implements LoaderMana
                     // We should receive the uri of the selected image from resultData.getData()
                     if (resultData != null) {
                         imageUri = resultData.getData();
-                        Log.i(LOG_TAG, "Uri: " + imageUri.toString());
 
                         // Copy the image located at the returned Uri to the storage of our app
                         // Also remove the previous version of the image from the filesystem IF
@@ -329,16 +310,10 @@ public class AddEditItemActivity extends AppCompatActivity implements LoaderMana
                break;
             // Take picture with camera
             case REQUEST_IMAGE_CAPTURE:
-                Log.d(LOG_TAG, "img path is: " + product.getImagePath());
                 if (resultCode == Activity.RESULT_OK) {
-                    Log.d(LOG_TAG, "request came back... with OK status");
                     //update the preview
                     updateProductImagePreview();
-
-                    // create the thumbnail file also - TODO i think this should be moved to only happen on actual save...
-                    //product.createThumbnail();
                 } else {
-                    Log.d(LOG_TAG, "request came back... status was NOT OK");
                     // Delete the temporary file created before starting the camera activity
                     // and revert the image path to the old path (how it was before editing)
                     product.removeProductImageIfChanged();
@@ -484,12 +459,6 @@ public class AddEditItemActivity extends AppCompatActivity implements LoaderMana
         }
 
         // validate supplier email (optional)
-        if(!product.getSupplier().isEmpty()) {
-            Log.d(LOG_TAG, "is NOT empty: ");
-        }
-        else {
-            Log.d(LOG_TAG, "is empty: ");
-        }
         if(!product.getSupplier().isEmpty() && !android.util.Patterns.EMAIL_ADDRESS.matcher(product.getSupplier()).matches()) {
             Toast.makeText(this, R.string.validation_error_supplier_invalid, Toast.LENGTH_LONG).show();
             return false;

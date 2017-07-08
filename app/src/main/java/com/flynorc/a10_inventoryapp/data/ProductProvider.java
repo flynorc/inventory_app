@@ -8,10 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.flynorc.a10_inventoryapp.data.InventoryContract.ProductEntry;
 
@@ -22,8 +20,6 @@ import com.flynorc.a10_inventoryapp.data.InventoryContract.ProductEntry;
 
 public class ProductProvider extends ContentProvider {
 
-    private static final String LOG_TAG = "Product provider";
-
     //URI matcher code for the content URI for the products table
     private static final int PRODUCTS = 100;
 
@@ -32,7 +28,6 @@ public class ProductProvider extends ContentProvider {
 
     //URI matcher code for the content URI for calling a sale (decreasing quantity by one) for a single product in the products table
     private static final int PRODUCT_ID_SALE = 102;
-
 
     /**
      * UriMatcher object to match a content URI to a corresponding code.
@@ -165,7 +160,6 @@ public class ProductProvider extends ContentProvider {
         long id = database.insert(ProductEntry.TABLE_NAME, null, values);
         // If the ID is -1, then the insertion failed. Log an error and return null.
         if (id == -1) {
-            Log.e(LOG_TAG, "Failed to insert row for " + uri);
             return null;
         }
 
@@ -178,14 +172,11 @@ public class ProductProvider extends ContentProvider {
 
     private void validateProductInsert(ContentValues values) {
 
-        // Check that the name is not null
+        // Check that the required fields are not null
         validateRequired(values, ProductEntry.COLUMN_PRODUCT_NAME);
-
-
-        /*
-         * TODO ADD OTHER VALIDATION HERE
-         */
-
+        validateRequired(values, ProductEntry.COLUMN_PRODUCT_PRICE);
+        validateRequired(values, ProductEntry.COLUMN_PRODUCT_QUANTITY);
+        validateRequired(values, ProductEntry.COLUMN_PRODUCT_IMAGE_PATH);
     }
 
     @Override
@@ -250,8 +241,6 @@ public class ProductProvider extends ContentProvider {
                 // Execute the prepared statement
                 int nrRowsUpdated = statement.executeUpdateDelete();
 
-                Log.d(LOG_TAG, "nr updated: " + nrRowsUpdated);
-
                 // There was a change in the database, notify all interested parties about it
                 if(nrRowsUpdated > 0) {
                     getContext().getContentResolver().notifyChange(ContentUris.withAppendedId(ProductEntry.CONTENT_URI, ContentUris.parseId(uri)), null);
@@ -293,8 +282,6 @@ public class ProductProvider extends ContentProvider {
         if (values.containsKey(ProductEntry.COLUMN_PRODUCT_NAME)) {
             validateRequired(values, ProductEntry.COLUMN_PRODUCT_NAME);
         }
-
-        //TODO implement for other columns
     }
 
     private void validateRequired(ContentValues values, String columnName) {

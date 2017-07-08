@@ -8,11 +8,10 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/standardMargin"
-        android:layout_marginRight="@dimen/standardMargin"
+        android:layout_margin="@dimen/standardMargin"
         android:id="@+id/item_thumb"
         android:scaleType="centerInside"/>
     <LinearLayout
@@ -20,7 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginBottom="100dp">
+        android:layout_marginBottom="@dimen/standardMargin"
+        android:layout_marginTop="@dimen/standardMargin">
         <TextView
             android:id="@+id/item_name"
             tools:text="Item name"

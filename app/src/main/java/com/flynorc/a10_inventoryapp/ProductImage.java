@@ -15,8 +15,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -32,8 +30,6 @@ import java.util.Date;
  */
 
 public class ProductImage {
-    public static final String LOG_TAG = "ProductImage class";
-
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
 
@@ -46,7 +42,6 @@ public class ProductImage {
         // make sure file with that path exists
         File imageFile = new File(imagePath);
         if(imageFile.exists()) {
-            Log.d(LOG_TAG, "file exists, yeey");
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
 
             // read the orientation from the metadata
@@ -63,25 +58,18 @@ public class ProductImage {
             switch(orientation) {
 
                 case ExifInterface.ORIENTATION_ROTATE_90:
-                    Log.d(LOG_TAG, "90 deg rotate");
                     bitmap = rotateImage(bitmap, 90);
                     break;
 
                 case ExifInterface.ORIENTATION_ROTATE_180:
-                    Log.d(LOG_TAG, "180 deg rotate");
                     bitmap = rotateImage(bitmap, 180);
                     break;
 
                 case ExifInterface.ORIENTATION_ROTATE_270:
-                    Log.d(LOG_TAG, "270 deg rotate");
                     bitmap = rotateImage(bitmap, 270);
                     break;
 
                 case ExifInterface.ORIENTATION_NORMAL:
-                    Log.d(LOG_TAG, "NO deg rotate");
-                    break;
-                default:
-                    Log.d(LOG_TAG, "unknown stuff " + orientation);
                     break;
             }
             return bitmap;
@@ -106,9 +94,17 @@ public class ProductImage {
     }
 
 
+    /**
+     * function copies the file located at given uri and stores it to internal storage
+     * in the folder of our app
+     * @param uri
+     * @param storageDir
+     * @param context
+     * @return
+     * @throws IOException
+     */
     public static File copyImageFromUri(Uri uri, File storageDir, Context context) throws IOException {
         String imagePath = getPath(context, uri) ;
-        Log.i(LOG_TAG, "Path: " + imagePath);
 
         File sourceFile = new File(imagePath);
 
@@ -138,6 +134,12 @@ public class ProductImage {
         return outputFile;
     }
 
+    /**
+     * Creates an empty image file with the prefix and suffix inside our apps folder
+     * @param storageDir
+     * @return
+     * @throws IOException
+     */
     public static File createImageFile(File storageDir) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -148,26 +150,30 @@ public class ProductImage {
     }
 
     public static void deleteFile(String filePath) {
-        File fdelete = new File(filePath);
-        if (fdelete.exists()) {
-            if (fdelete.delete()) {
-                Log.d(LOG_TAG, "file was deleted");
-            } else {
-                Log.d(LOG_TAG, "file was not deleted");
-            }
+        File fileToDelete = new File(filePath);
+        if (fileToDelete.exists()) {
+            fileToDelete.delete();
         }
     }
 
+    /**
+     * Creates a thumbnail of the image at given path in the same folder with the filename
+     * based on the original path (only adding _thumb at the end of the file name - before ending)
+     * @param imagePath
+     * @return
+     */
     public static String createThumbnail(String imagePath) {
         //make the filename have _thumb prefix (before the .jpg) ending
         String thumbnailPath = imagePath.substring(0, imagePath.length() - 4) + "_thumb" + imagePath.substring(imagePath.length()-4);
-
-        Bitmap bmThumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), 100, 100);
+        // Thumbnail of 400x400 px should be enough for all kind of devices in 100dp
+        // in a real app this should be calculated based on the screen type,
+        //but I guess it is out of the scope for this course
+        Bitmap bmThumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imagePath), 400, 400);
 
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(thumbnailPath);
-            bmThumbnail.compress(Bitmap.CompressFormat.JPEG, 80, out);
+            bmThumbnail.compress(Bitmap.CompressFormat.JPEG, 85, out);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -186,15 +192,17 @@ public class ProductImage {
     /*
      * code to get the file path from uri
      * https://stackoverflow.com/questions/36128077/android-opening-a-file-with-action-get-content-results-into-different-uris
+     * Don't know how to solve the "Call requires API level 19" in the marked lines (apart from simply changing the build.gradle
+     * but as I was also testing on API 17, I left it so
      */
     public static String getPath(Context context, Uri uri) {
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {    //this line is API17 incompatible
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
+                final String docId = DocumentsContract.getDocumentId(uri); //this line is API17 incompatible
                 final String[] split = docId.split(":");
                 final String type = split[0];
 
@@ -205,14 +213,14 @@ public class ProductImage {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
+                final String id = DocumentsContract.getDocumentId(uri); //this line is API17 incompatible
                 final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
             else
             if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
+                final String docId = DocumentsContract.getDocumentId(uri); //this line is API17 incompatible
                 final String[] split = docId.split(":");
                 final String type = split[0];
                 Uri contentUri = null;

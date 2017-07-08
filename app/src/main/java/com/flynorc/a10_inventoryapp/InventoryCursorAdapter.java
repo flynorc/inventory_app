@@ -19,6 +19,7 @@ import com.flynorc.a10_inventoryapp.data.InventoryContract.ProductEntry;
 
 /**
  * Created by flynorc on 31.5.2017.
+ * custom cursor adapter implementation
  */
 
 public class InventoryCursorAdapter extends CursorAdapter {
@@ -67,35 +68,22 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
             @Override
             public void onClick(View v) {
+                // get the position and item id, so we can generate the uri we need to
+                // decrease quantity of that product in DB
                 View parentRow = (View) v.getParent();
                 ListView listView = (ListView) parentRow.getParent();
                 int position = listView.getPositionForView(parentRow);
                 long itemId = listView.getItemIdAtPosition(position);
-                Log.d("POSITION" , position + " clicked..");
-                Log.d("id" , itemId + " position in db..");
                 Uri currentItemUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI_SELL, itemId);
-                Log.d("ADAPTER uri", currentItemUri.toString());
                 context.getContentResolver().update(currentItemUri, null, null, null);
             }
         });
-        /*
-        //get the column identifiers
-        int nameColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
-        int priceColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
-        int quantityColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
-        int thumbColumnIndex = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_THUMB_PATH);
 
-        //get the data from the database
-        String itemName = cursor.getString(nameColumnIndex);
-        String itemPrice = formatPrice(cursor.getInt(priceColumnIndex), context);
-        int itemQuantity = cursor.getInt(quantityColumnIndex);
-        String thumbPath = cursor.getString(thumbColumnIndex);
-*/
         Product product = Product.createProductBaseFromCursorData(cursor);
         //update the values
         nameTextView.setText(product.getName());
         priceTextView.setText(product.getPriceForDisplay(context, true));
-        quantityTextView.setText(product.getQuantity() + ""); //create a string from integer by concatenating an empty string to it
+        quantityTextView.setText(context.getResources().getQuantityString(R.plurals.number_items_left, product.getQuantity(), product.getQuantity()));
 
         //disable the button if quantity is 0, to prevent the user from clicking on sell button
         if(product.getQuantity() > 0) {
@@ -107,20 +95,5 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
         thumbImageView.setImageBitmap(BitmapFactory.decodeFile(product.getThumbnailPath()));
 
-    }
-
-    /**
-     * Helper function to format price from the integer notation stored in database to decimal
-     * with the unit added - e.g. 1550 becomes "15.50€"
-     *
-     * @param price in cents
-     * @return string representing price with two decimal places
-     */
-    private String formatPrice(int price, Context context) {
-        //convert int to float
-        double decimalPrice = price / 100.0;
-
-        //convert to String of correct format and return
-        return String.format("%.2f", decimalPrice) + context.getString(R.string.price_unit);
     }
 }

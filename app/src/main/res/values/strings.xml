@@ -39,4 +39,10 @@
     <string name="email_subject">Product order for:</string>
     <string name="email_body_intro">We would like to order !!!REPLACE_ME!!! items of:</string>
     <string name="send_email_using">Send Email Using:</string>
+    <string name="select_picture">Select Picture</string>
+
+    <plurals name="number_items_left">
+        <item quantity="one">%d item left.</item>
+        <item quantity="other">%d items left.</item>
+    </plurals>
 </resources>

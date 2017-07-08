@@ -19,10 +19,6 @@ import java.io.IOException;
  */
 
 public class Product {
-
-    // Logging tag
-    public static final String LOG_TAG = "Product class";
-
     // Values of the item
     private String name = "";
     private int price = 0;
@@ -31,10 +27,6 @@ public class Product {
     private String supplier = "";
     private String imagePath = null;
     private String thumbnailPath = null;
-    // path to the image that has already been chosen from gallery or taken with camera,
-    // but before the changes were saved to DB
-    // the file needs to be removed if the user decided to discard the changes
-    private String temporaryImagePath;
 
     // Original values of the item (used to check if values have actually changed)
     // and to delete the old image(s) from storage if a new one is provided
@@ -46,6 +38,7 @@ public class Product {
     private String imagePathOld = null;
     private String thumbnailPathOld = null;
 
+    // no need to do any initialization when creating a new product via constructor
     public Product() {
 
     }
@@ -67,6 +60,7 @@ public class Product {
         }
         return String.format("%.2f", price/100.0);
     }
+
     public int getQuantity() {
         return quantity;
     }
@@ -125,7 +119,6 @@ public class Product {
      */
     public boolean hasChanged() {
 
-        Log.d(LOG_TAG, "has changed here");
         return !areStringsSame(name, nameOld) ||
                 !areStringsSame(description, descriptionOld) ||
                 !areStringsSame(supplier, supplierOld) ||
@@ -152,7 +145,6 @@ public class Product {
     }
 
     private boolean areIntsSame(int valueNew, int valueOld) {
-        Log.d(LOG_TAG, "comparing ints...  old: " + valueOld + ", new: " + valueNew);
         return valueNew == valueOld;
     }
 
@@ -172,7 +164,6 @@ public class Product {
         }
     }
 
-
     private void restoreOldImagePath() {
         imagePath = imagePathOld;
     }
@@ -187,8 +178,6 @@ public class Product {
     }
 
     public void createThumbnail() {
-
-        Log.d(LOG_TAG, "creating thumbnail");
         thumbnailPath = ProductImage.createThumbnail(imagePath);
     }
 
@@ -288,6 +277,4 @@ public class Product {
 
         return product;
     }
-
-
 }
