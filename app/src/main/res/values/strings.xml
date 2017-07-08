@@ -5,8 +5,8 @@
     <string name="product_price_label">Price</string>
     <string name="product_description_label">Product description (optional)</string>
     <string name="product_supplier_email_label">Supplier email address</string>
-    <string name="select_image_label">Select image (gallery)</string>
-    <string name="take_picture_label">Take picture (camera)</string>
+    <string name="select_image_label">Select image</string>
+    <string name="take_picture_label">Take picture</string>
     <string name="action_save">Save!</string>
     <string name="action_delete">Delete!</string>
     <string name="catalog_activity_label">10 - Inventory app</string>

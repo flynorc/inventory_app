@@ -25,6 +25,8 @@ tools:context="com.flynorc.a10_inventoryapp.CatalogActivity">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/standardMargin"
+            android:layout_marginRight="@dimen/standardMargin"
             android:text="@string/empty_view_text"/>
     </RelativeLayout>
 

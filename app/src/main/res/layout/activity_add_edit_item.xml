@@ -125,6 +125,7 @@
             android:layout_height="wrap_content"
             android:maxHeight="400dp"
             android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
             android:scaleType="centerInside" />
 
     </LinearLayout>
