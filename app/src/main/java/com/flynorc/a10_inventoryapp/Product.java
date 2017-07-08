@@ -4,15 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.util.Log;
 
 import com.flynorc.a10_inventoryapp.data.InventoryContract;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by Flynorc on 07-Jul-17.

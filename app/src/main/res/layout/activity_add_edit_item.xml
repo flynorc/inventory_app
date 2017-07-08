@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/product_price_label"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

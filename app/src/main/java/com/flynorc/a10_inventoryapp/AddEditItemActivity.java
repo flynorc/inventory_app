@@ -36,6 +36,8 @@ import com.flynorc.a10_inventoryapp.data.InventoryContract.ProductEntry;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
 
 public class AddEditItemActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -496,7 +498,16 @@ public class AddEditItemActivity extends AppCompatActivity implements LoaderMana
         if(s.isEmpty()) {
             return 0;
         }
-        Float price = Float.parseFloat(s);
+        Float price = 0.0f;
+        NumberFormat nf = NumberFormat.getInstance();
+        try {
+            Number number = nf.parse(s);
+            price = number.floatValue();
+        } catch (ParseException e) {
+            Toast.makeText(this, R.string.price_parsing_error, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
         return Math.round(price*100);
 
     }
